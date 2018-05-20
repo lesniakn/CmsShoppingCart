@@ -90,5 +90,32 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             // Redirect
             return RedirectToAction("AddPage");
         }
+
+        // GET: Admin/Pages/AddPage
+        public ActionResult EditPage(int id)
+        {
+            // Declare PageVM
+            PageVM model;
+
+            using (Db db = new Db())
+            {
+                // Get the page
+                PageDTO dto = db.Pages.Find(id);
+
+                // Confirm page exists
+                if (dto == null)
+                {
+                    return Content("The page does not exist.");
+                }
+
+                // Init PageVM
+                model = new PageVM(dto);
+
+               
+            }
+
+                // Return view with model
+                return View(model);
+        }
     }
 }
