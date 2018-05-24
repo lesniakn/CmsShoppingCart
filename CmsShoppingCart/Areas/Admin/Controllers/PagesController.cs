@@ -225,5 +225,73 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
         }
 
+
+        // POST: Admin/Pages/ReorderPages
+        [HttpPost]
+        public void ReorderPages(int[] id)
+        {
+            using (Db db = new Db())
+            {
+                // Get initial count
+                int count = 1;
+
+                // Declare PageDTO
+                PageDTO dto;
+
+                // Set sorting for each page
+                foreach (var pageId in id)
+                {
+                    dto = db.Pages.Find(pageId);
+                    dto.Sorting = count;
+
+                    db.SaveChanges();
+
+                    count++;
+                }
+            }
+        }
+        
+        // GET: Admin/Pages/EditSidebar
+        [HttpGet]
+        public ActionResult EditSidebar()
+        {
+            // Declare model
+            SidebarVM model;
+
+            using (Db db = new Db())
+            {
+                // Get the DTO
+                SidebarDTO dto = db.Sidebar.Find(1);
+
+                // Init model
+                model = new SidebarVM(dto);
+
+            }
+            // Return view with model
+            return View(model);
+        }
+
+        // POST: Admin/Pages/EditSidebar
+        [HttpPost]
+        public ActionResult EditSidebar(SidebarVM model)
+        {
+            using (Db db = new Db())
+            {
+                // Get the DTO
+                SidebarDTO dto = db.Sidebar.Find(1);
+
+                // DTO the body
+                dto.Body = model.Body;
+
+                // Save
+                db.SaveChanges();
+            }
+            // Set TempData
+            TempData["SM"] = "You have edited the sidebar!";
+
+            // Redirect
+            return RedirectToAction("EditSidebar");
+        }
+  
     }
 }
